@@ -2,7 +2,7 @@
 
 from src.ast.astconverter import ASTConverter
 from src.ast.astfilter import ASTFilter
-from src.output.output import create_output_directory
+from src.output.output_gen import create_output_directory
 from src.readers.filecrawler import crawl_directory
 from src.readers.ignore import create_ignore_dict
 from src.readers.parser import generate_file_ast
