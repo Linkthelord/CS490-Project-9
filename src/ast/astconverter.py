@@ -196,7 +196,7 @@ class ASTConverter:
       'module': 'ast'
       'names': {
         {
-          'name': 'parse',
+          'name': 'ast.parse',
           'alias': 'p'
         }
       }
@@ -211,7 +211,7 @@ class ASTConverter:
       alias['name'] = z.name
       alias['alias'] = z.asname
       if z.asname != None:
-        self.aliases[z.asname] = z.name
+        self.aliases[z.asname] = root.module + '.' + z.name
       import_aliases.append(alias)
     import_from['names'] = import_aliases
     return import_from

@@ -8,7 +8,8 @@ class AstConverterTestClass(unittest.TestCase):
     source ="""
 import ast
 import math
-from math import random"""
+from math import random as r
+r()"""
 
     expected = {
       'imports': [
@@ -36,18 +37,26 @@ from math import random"""
           'type': 'import_from',
           'names': [
             {
-              'name': 'random',
+              'name': 'math.random',
               'alias': None
             }
           ]
         }
       ],
-      'calls': [],
+      'calls': [
+        {
+          'type': 'call',
+          'function': 'math.random',
+          'args': [],
+          'keywords': []
+        }
+      ],
       'function_defs': []
     }
 
     astconverter = ASTConverter()
     actual = astconverter.run(ast.parse(source))
+    print(actual)
     self.assertDictEqual(actual, expected)
   
   def test_run_call(self):

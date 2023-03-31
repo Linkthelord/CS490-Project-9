@@ -1,10 +1,7 @@
 import ast as a
 import time as t
 from math import sin as s, cos as c
+from torch.optim import SGD as s, SparseAdam as a
 
 
-return_One(x = 1)
-print(return_One(y = 1))
-print(print(print(return_One(print(), y))))
-print(print(print(return_One(x, x = y))))
-print(x = 27)
+s(a(y = s(a(z = x, x = 3, y = 3))))

@@ -8,50 +8,73 @@ def read_function_names(path):
 
   Example:
   {
+    "module": "module",
     "functions": [
       {
-        "name": "test_func",
-        "args": [
-          "arg1", "arg2"
+        "func1": [
+          "arg1", ...
         ]
-      }
+      },
+      "func2" 
+    ]
   }
 
   yields
 
-  names = ['test_func']
-  args = {
-    'test_func': ['arg1', 'arg2']
+  func_names = {
+    'module.func1': ['arg1'],
+    'module.func2': []
   }
   '''
-  f = open(path, 'r')
-  json_data = json.load(f)
-  f.close()
-
-  names = []
-  args = {}
   try:
-    for func in json_data['functions']:
-      names.append(func['name'])
-      args[func['name']] = func['args']
-  except Exception:
+    f = open(path, 'r')
+    json_data = json.load(f)
+    f.close()
+  except Exception as e:
+    print('Error occurred while reading function names file:', path)
+    print('Error:', e)
+    return {}
+
+  func_names = {}
+  try:
+    for module in json_data['functions']:
+      module_name = None
+      if 'module' in module.keys():
+        module_name = module['module']
+      functions = module['functions']
+
+      for func in functions:
+        function_name = func
+        arg_names = []
+        if isinstance(func, dict):
+          function_name = func['function_name']
+          arg_names = func['arg_names']
+
+        function_name = module_name + '.' + function_name if module_name != None else function_name
+        func_names[function_name] = arg_names
+    
+    module_keys = list(func_names.keys())
+    module_keys.sort()
+    sorted_dict = {i: func_names[i] for i in module_keys}
+    func_names = sorted_dict
+  except Exception as e:
     print('Note: function names JSON file has incorrect format:', os.path.abspath(path))
     print('Ensure file follows the format:', """
       {
         "functions": [
           {
-            "name": "[function name]",
-            "args": [
-              "arg1", "arg2", ... 
-            ]
-          },
-          {
-            "name": "[another function name]",
-            "args": [
-              "arg1", "arg2", ... 
+            "module": "[module name]",
+            "functions": [
+              "func1": {
+                "arg_names": [
+                  "arg1", ...
+                ]
+              },
+              "func2", ... 
             ]
           }
         ]
       }
     """)
-  return args
+    print('Error:', e)
+  return func_names
