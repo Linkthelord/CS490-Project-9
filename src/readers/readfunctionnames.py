@@ -11,9 +11,7 @@ def read_function_names(path):
     "module": "module",
     "functions": [
       {
-        "func1": [
-          "arg1", ...
-        ]
+        "func_name": ["args1", "args2", ...],
       },
       "func2" 
     ]
@@ -22,7 +20,7 @@ def read_function_names(path):
   yields
 
   func_names = {
-    'module.func1': ['arg1'],
+    'module.func1': ['args1', 'args2'],
     'module.func2': []
   }
   '''
@@ -32,7 +30,7 @@ def read_function_names(path):
     f.close()
   except Exception as e:
     print('Error occurred while reading function names file:', path)
-    print('Error:', e)
+    print('Exception:', e)
     return {}
 
   func_names = {}
@@ -47,34 +45,19 @@ def read_function_names(path):
         function_name = func
         arg_names = []
         if isinstance(func, dict):
-          function_name = func['function_name']
-          arg_names = func['arg_names']
-
-        function_name = module_name + '.' + function_name if module_name != None else function_name
-        func_names[function_name] = arg_names
+          for key in func.keys():
+            arg_names = func[key]
+            function_name = module_name + '.' + key if module_name != None else key
+            func_names[function_name] = arg_names
+        else:
+          function_name = module_name + '.' + function_name if module_name != None else function_name
+          func_names[function_name] = arg_names
     
     module_keys = list(func_names.keys())
     module_keys.sort()
     sorted_dict = {i: func_names[i] for i in module_keys}
     func_names = sorted_dict
   except Exception as e:
-    print('Note: function names JSON file has incorrect format:', os.path.abspath(path))
-    print('Ensure file follows the format:', """
-      {
-        "functions": [
-          {
-            "module": "[module name]",
-            "functions": [
-              "func1": {
-                "arg_names": [
-                  "arg1", ...
-                ]
-              },
-              "func2", ... 
-            ]
-          }
-        ]
-      }
-    """)
-    print('Error:', e)
+    print('Error occurred while parsing function names file:', os.path.abspath(path))
+    print('Exception:', e)
   return func_names

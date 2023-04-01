@@ -212,6 +212,8 @@ class ASTConverter:
       alias['alias'] = z.asname
       if z.asname != None:
         self.aliases[z.asname] = root.module + '.' + z.name
+      else:
+        self.aliases[z.name] = root.module + '.' + z.name
       import_aliases.append(alias)
     import_from['names'] = import_aliases
     return import_from

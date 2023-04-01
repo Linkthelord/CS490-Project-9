@@ -7,6 +7,7 @@ def create_ignore_dict():
   .ignore file. Paths can be relative or absolute, and ignored patterns are
   specified using the 'ignore:' prefix in the .ignore file.
   '''
+
   output_dict = {'paths': [], 'ignore': [], 'include': []}
   try:
     with open('.ignore') as f:
