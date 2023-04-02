@@ -72,13 +72,6 @@ class ASTFilter():
         new_imports.append(temp_import)
     ast_nodes['imports'] = new_imports
 
-    new_imports = []
-    for import_ast in ast_nodes['import_froms']:
-      temp_import = self.reduce_imports(import_ast)
-      if temp_import != None:
-        new_imports.append(temp_import)
-    ast_nodes['import_froms'] = new_imports
-
     new_calls = []
     for call in ast_nodes['calls']:
       if self.reduce_call(call) != None:
@@ -98,8 +91,10 @@ class ASTFilter():
     False otherwise.
     '''
     names = []
+    module = imports_ast['module']
     for name in imports_ast['names']:
-      if name['name'] in self.function_names:
+      func_name = name['name'] if module == None else module + '.' + name['name']
+      if func_name in self.function_names:
         names.append(name)
     imports_ast['names'] = names
 

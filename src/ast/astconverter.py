@@ -20,15 +20,14 @@ class ASTConverter:
 
     return self.walk_ast(root)
 
+
   def convert_arguments(self, root):
     if isinstance(root, ast.Call):
       return self.convert_call(root)
     elif isinstance(root, ast.FunctionDef):
       return self.convert_function_def(root)
-    elif isinstance(root, ast.Import):
+    elif isinstance(root, ast.Import) or isinstance(root, ast.ImportFrom):
       return self.convert_import(root)
-    elif isinstance(root, ast.ImportFrom):
-      return self.convert_import_from(root)
     elif isinstance(root, ast.Tuple):
       tuple_dict = {}
       tuple_dict['type'] = 'tuple'
@@ -150,39 +149,40 @@ class ASTConverter:
     call['keywords'] = keywords
     return call
 
-  def convert_import(self, root):
-    '''Converts Import nodes into a dictionary with a 'names' field containing
-    a list of import aliases.
+  # def convert_import(self, root):
+  #   '''Converts Import nodes into a dictionary with a 'names' field containing
+  #   a list of import aliases.
 
-    Example:
+  #   Example:
 
-    import ast as a
+  #   import ast as a
     
-    yields
+  #   yields
 
-    {
-      'names': {
-        {
-          'name': 'ast',
-          'alias': 'a'
-        }
-      }
-    }
-    '''
-    import_res = {}
-    import_res['type'] = 'import'
-    import_aliases = []
-    for z in root.names:
-      alias = {}
-      alias['name'] = z.name
-      alias['alias'] = z.asname
-      if z.asname != None:
-        self.aliases[z.asname] = z.name
-      import_aliases.append(alias)
-    import_res['names'] = import_aliases
-    return import_res
+  #   {
+  #     'names': {
+  #       {
+  #         'name': 'ast',
+  #         'alias': 'a'
+  #       }
+  #     }
+  #   }
+  #   '''
+  #   import_res = {}
+  #   import_res['type'] = 'import'
+  #   import_res['module'] = None
+  #   import_aliases = []
+  #   for z in root.names:
+  #     alias = {}
+  #     alias['name'] = z.name
+  #     alias['alias'] = z.asname
+  #     if z.asname != None:
+  #       self.aliases[z.asname] = z.name
+  #     import_aliases.append(alias)
+  #   import_res['names'] = import_aliases
+  #   return import_res
 
-  def convert_import_from(self, root):
+  def convert_import(self, root):
     '''Converts ImportFrom nodes into a dictionary with 'module' and 'names'
     fields.
 
@@ -202,21 +202,31 @@ class ASTConverter:
       }
     }
     '''
-    import_from = {}
-    import_from['module'] = root.module
-    import_from['type'] = 'import_from'
+    import_res = {}
+    import_res['type'] = 'import'
+    import_res['module'] = None
+    if isinstance(root, ast.ImportFrom):
+      import_res['module'] = root.module
+    
     import_aliases = []
     for z in root.names:
       alias = {}
       alias['name'] = z.name
       alias['alias'] = z.asname
-      if z.asname != None:
-        self.aliases[z.asname] = root.module + '.' + z.name
+
+      if isinstance(root, ast.ImportFrom):
+        alias_name = root.module + '.' + z.name
       else:
-        self.aliases[z.name] = root.module + '.' + z.name
+        alias_name = z.name
+      
+      if z.asname != None:
+        self.aliases[z.asname] = alias_name
+      else:
+        self.aliases[z.name] = alias_name
       import_aliases.append(alias)
-    import_from['names'] = import_aliases
-    return import_from
+    
+    import_res['names'] = import_aliases
+    return import_res
 
   def convert_function_defs(self, root):
     '''Converts Function nodes into a dictionary with the fields 'names',
@@ -317,7 +327,7 @@ class ASTConverter:
     '''Traverses AST to find Import, ImportFrom, Call, and FunctionDef nodes.
     
     This function traverses (in BFS fashion) the AST and returns a dictionary
-    containing 'imports', 'import_froms', 'call', and 'function_defs' fields.
+    containing 'imports', 'call', and 'function_defs' fields.
     
     We are mainly interested in Import, ImportFrom, Call, and FunctionDef
     nodes.
@@ -326,7 +336,6 @@ class ASTConverter:
     res = {}
 
     res['imports'] = []
-    res['import_froms'] = []
     res['calls'] = []
     res['function_defs'] = []
 
@@ -334,10 +343,8 @@ class ASTConverter:
     while todo:
       node = todo.popleft()
 
-      if isinstance(node, ast.Import):
+      if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
         res['imports'].append(self.convert_import(node))
-      elif isinstance(node, ast.ImportFrom):
-        res['import_froms'].append(self.convert_import_from(node))
       elif isinstance(node, ast.Call):
         res['calls'].append(self.convert_call(node))
       elif isinstance(node, ast.FunctionDef):

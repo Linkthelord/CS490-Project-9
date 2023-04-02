@@ -42,7 +42,7 @@ def main():
   for [path, ast] in file_ast:
     ast_converter = ASTConverter()
     converted_ast = ast_converter.run(ast)
-    
+
     ast_filter = ASTFilter(func_args)
     filtered_ast = ast_filter.run(converted_ast)
     results.append([path, filtered_ast])
