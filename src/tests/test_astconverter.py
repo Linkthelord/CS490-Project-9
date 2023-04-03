@@ -15,30 +15,31 @@ r()"""
       'imports': [
         {
           'type': 'import',
+          'module': None,
           'names': [
             {
               'name': 'ast',
               'alias': None
-            }]
+            }
+          ]
         },
         {
           'type': 'import',
+          'module': None,
           'names': [
             {
               'name': 'math',
               'alias': None
             }
           ]
-        }
-      ],
-      'import_froms': [
+        },
         {
+          'type': 'import',
           'module': 'math',
-          'type': 'import_from',
           'names': [
             {
-              'name': 'math.random',
-              'alias': None
+              'name': 'random',
+              'alias': 'r'
             }
           ]
         }
@@ -56,7 +57,6 @@ r()"""
 
     astconverter = ASTConverter()
     actual = astconverter.run(ast.parse(source))
-    print(actual)
     self.assertDictEqual(actual, expected)
   
   def test_run_call(self):
@@ -64,7 +64,6 @@ r()"""
 
     expected = {
       'imports': [],
-      'import_froms': [],
       'calls': [
         {
           'type': 'call',
@@ -91,7 +90,6 @@ r()"""
 
     expected = {
       'imports': [],
-      'import_froms': [],
       'calls': [
         {
           'type': 'call',
@@ -130,7 +128,6 @@ r()"""
 
     expected = {
       'imports': [],
-      'import_froms': [],
       'calls': [
         {
           'type': 'call',
@@ -176,7 +173,6 @@ def func_def(x, y, z):
 
     expected = {
       'imports': [],
-      'import_froms': [],
       'calls': [],
       'function_defs': [
         {
@@ -245,6 +241,7 @@ def func_def(x, y, z):
       'imports': [
         {
           'type': 'import',
+          'module': None,
           'names': [
             {
               'name': 'print',
@@ -257,7 +254,6 @@ def func_def(x, y, z):
           ]
         }
       ],
-      'import_froms': [],
       'calls': [
         {
           'type': 'call',
