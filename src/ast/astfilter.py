@@ -56,7 +56,13 @@ class ASTFilter():
     respectively. 3 is filtered out from args because it is neither of those
     types of arguments.
     '''
-    return self.filter_ast(ast)
+    result = self.filter_ast(ast)
+
+    for key in result.keys():
+      if len(result[key]) > 0:
+        return result
+    
+    return None
 
   def filter_ast(self, ast_nodes):
     '''Encapsulating function that filters out imports, import_froms, calls,

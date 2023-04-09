@@ -32,6 +32,7 @@ def main():
 
   # Retrieve file paths that are not 'ignored' by the .ignore file.
   file_paths = crawl_directory(project_path, create_ignore_dict())
+  
   # Generate file AST for each path.
   file_ast = generate_file_ast(file_paths)
 
@@ -45,7 +46,8 @@ def main():
 
     ast_filter = ASTFilter(func_args)
     filtered_ast = ast_filter.run(converted_ast)
-    results.append([path, filtered_ast])
+    if filtered_ast != None:
+      results.append([path, filtered_ast])
 
   # Create the output directory if there is something to output.
   if len(results) > 0:
