@@ -39,7 +39,7 @@
         ]
     },
     {
-        "module": "keras.layers",
+        "module": "tf.keras.layers",
         "functions": [
           "Dense", "Conv2D",
           "BatchNormalization", "Activation",
@@ -57,7 +57,7 @@
         ]
     },
     {
-        "module": "keras.optimizers",
+        "module": "tf.keras.optimizers",
         "functions": [
           "Adam",
           "SGD",
@@ -72,7 +72,7 @@
         ]
     },
     {
-        "module": "keras.losses",
+        "module": "tf.keras.losses",
         "functions": [
           "CategoricalCrossentropy",
           "BinaryCrossentropy",

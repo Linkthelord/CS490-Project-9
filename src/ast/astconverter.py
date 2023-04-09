@@ -132,7 +132,7 @@ class ASTConverter:
     '''
     call = {}
     call['type'] = 'call'
-    call['function'] = self.get_function_names(root.func)
+    call['function'] = ast.unparse(root.func)
 
     args = []
     for node in root.args:
