@@ -169,7 +169,7 @@ class ASTConverter:
     import_res = {}
     import_res['type'] = 'import'
     import_res['module'] = None
-    if isinstance(root, ast.ImportFrom):
+    if isinstance(root, ast.ImportFrom) and root.module != None:
       import_res['module'] = root.module
     
     import_aliases = []
@@ -178,7 +178,7 @@ class ASTConverter:
       alias['name'] = z.name
       alias['alias'] = z.asname
 
-      if isinstance(root, ast.ImportFrom):
+      if isinstance(root, ast.ImportFrom) and root.module != None:
         alias_name = root.module + '.' + z.name
       else:
         alias_name = z.name

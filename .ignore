@@ -1,5 +1,6 @@
 ./.ignore
 ignore:__pycache__
 ./.gitignore
+ignore:.pylintrc
 include:.py
 ./output
