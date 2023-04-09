@@ -33,7 +33,7 @@ class ASTConverter:
       tuple_dict['type'] = 'tuple'
       elts = []
       for node in root.elts:
-        elts.append(convert_arguments(node))
+        elts.append(self.convert_arguments(node))
       tuple_dict['elements'] = elts
       return tuple_dict
     elif isinstance(root, ast.List):

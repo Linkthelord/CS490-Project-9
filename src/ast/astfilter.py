@@ -148,7 +148,7 @@ class ASTFilter():
     
     args = []
     for arg in call_ast['args']:
-      if isinstance(arg, dict) and 'type' in arg.keys():
+      if isinstance(arg, dict) and 'type' in arg.keys() and arg['type'] == 'call':
         temp_name = self.reduce_call(arg)
         if arg['type'] == 'call' and temp_name != None:
           args.append(arg)
@@ -186,7 +186,7 @@ class ASTFilter():
     
     function_defs = []
     for function_def in function_def_ast['function_defs']:
-      if reduce_function_def(function_def):
+      if self.reduce_function_def(function_def):
         function_defs.append(function_def)
     
     function_def_ast['calls'] = calls
