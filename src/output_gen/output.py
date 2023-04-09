@@ -45,7 +45,7 @@ def create_output_directory(path, project_path, output_path):
   output_file = filename_extension[0]
   if filename_extension[1][1:] != '':
     output_file = output_file + '_' + filename_extension[1][1:]
-  output_file = output_file + '_output'
+  output_file = output_file + '_output.json'
   output_dir = os.path.join(output_path, output_file)
 
   # Create the directories for the output file to exist.
