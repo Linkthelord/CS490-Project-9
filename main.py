@@ -55,9 +55,9 @@ def main():
     print('Note: Specified project directory resulted in empty output.')
     return
 
-  # Each file that is found is output under the output directory
-  # The naming convention of the output files is
-  # [0, number of files with valid JSON data).
+  # Each file that is found is output under the output directory.
+  # The files are output accordining to their name and extension
+  # with '_output' attached. Ex: test.py => test_py_output
   for [path, ast_json] in results:
     if len(ast_json) > 0:
       # Create the output directory
