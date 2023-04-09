@@ -110,7 +110,7 @@ class ASTFilter():
     if name_obj['attribute'] in self.function_names:
       return name_obj['attribute']
     
-    return self.search_call_name(name_obj['object'], self.function_names)
+    return self.search_call_name(name_obj['object'])
 
   def filter_call_args(self, call_ast, func_args):
     '''Filters the 'args' and 'keywords' fields of a 'call' node such that
