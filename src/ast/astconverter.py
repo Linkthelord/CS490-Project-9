@@ -71,42 +71,6 @@ class ASTConverter:
     else:
       return ast.unparse(root)
 
-  def get_function_names(self, root):
-    '''Returns all the function names of a node as a list.
-
-    Example:
-
-    return_test().walk().hello_world()
-
-    yields
-
-    {
-      "object": {
-        "object": [
-          "return_test"
-        ],
-        "attribute": "walk"
-      },
-      "attribute": "hello_world"
-    }
-    '''
-    if isinstance(root, ast.Name):
-      if root.id in self.aliases:
-        return self.aliases[root.id]
-      return root.id
-    elif isinstance(root, ast.Attribute):
-      attr = {}
-      attr['object'] = self.get_function_names(root.value)
-      attr['attribute'] = root.attr
-      return attr
-    elif isinstance(root, ast.Call):
-      return self.get_function_names(root.func)
-    else:
-      key = ast.unparse(root)
-      if key in self.aliases:
-        return self.aliases[key]
-      return key
-
   def convert_call(self, root):
     '''Converts Call nodes into a dictionary with the fields 'function', args',
     and 'keywords'.
