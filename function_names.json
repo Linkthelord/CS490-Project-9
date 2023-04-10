@@ -4,7 +4,10 @@
         "module": "torch.nn",
         "functions": [
           "Linear","Conv1d",
-          "Conv2d", "Conv3d",
+          "Conv2d", 
+          {
+            "Conv3d": ["in_channels", "out_channels"]
+          },
           "BatchNorm2d", "ReLU",
           "Dropout", "CrossEntropyLoss",
           "ELU", "Hardshrink", 
