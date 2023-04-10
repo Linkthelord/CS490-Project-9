@@ -112,39 +112,6 @@ class ASTConverter:
     call['keywords'] = keywords
     return call
 
-  # def convert_import(self, root):
-  #   '''Converts Import nodes into a dictionary with a 'names' field containing
-  #   a list of import aliases.
-
-  #   Example:
-
-  #   import ast as a
-    
-  #   yields
-
-  #   {
-  #     'names': {
-  #       {
-  #         'name': 'ast',
-  #         'alias': 'a'
-  #       }
-  #     }
-  #   }
-  #   '''
-  #   import_res = {}
-  #   import_res['type'] = 'import'
-  #   import_res['module'] = None
-  #   import_aliases = []
-  #   for z in root.names:
-  #     alias = {}
-  #     alias['name'] = z.name
-  #     alias['alias'] = z.asname
-  #     if z.asname != None:
-  #       self.aliases[z.asname] = z.name
-  #     import_aliases.append(alias)
-  #   import_res['names'] = import_aliases
-  #   return import_res
-
   def convert_import(self, root):
     '''Converts ImportFrom nodes into a dictionary with 'module' and 'names'
     fields.
