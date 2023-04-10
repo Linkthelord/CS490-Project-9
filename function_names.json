@@ -44,11 +44,11 @@
         ]
     },
     {
-        "module": "tf.keras.layers",
+        "module": "tensorflow.keras.layers",
         "functions": [
           "Dense",
           {
-            "Conv2d": ["in_channels", "out_channels"]
+            "Conv2D": ["in_channels", "out_channels"]
           },
           "BatchNormalization", "Activation",
           "Dropout", "Average",
@@ -65,7 +65,7 @@
         ]
     },
     {
-        "module": "tf.keras.optimizers",
+        "module": "tensorflow.keras.optimizers",
         "functions": [
           "Adam",
           "SGD",
@@ -80,7 +80,7 @@
         ]
     },
     {
-        "module": "tf.keras.losses",
+        "module": "tensorflow.keras.losses",
         "functions": [
           "CategoricalCrossentropy",
           "BinaryCrossentropy",

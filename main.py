@@ -2,6 +2,7 @@
 
 from src.ast.astconverter import ASTConverter
 from src.ast.astfilter import ASTFilter
+from src.ast.astreformatter import ASTReformatter
 from src.output_gen.output import create_output_directory
 from src.readers.filecrawler import crawl_directory
 from src.readers.ignore import create_ignore_dict
@@ -23,7 +24,7 @@ def main():
     print('Error: Invalid path entered -', project_path)
     return
   else:
-    print('Path entered:', project_path)
+    print('Input path entered:', project_path)
   
   output_path = os.path.abspath(sys.argv[2])
   if os.path.exists(output_path):
@@ -47,7 +48,9 @@ def main():
     ast_filter = ASTFilter(func_args)
     filtered_ast = ast_filter.run(converted_ast)
     if filtered_ast != None:
-      results.append([path, filtered_ast])
+      ast_reformatter = ASTReformatter(func_args)
+      reformatted_ast = ast_reformatter.run(filtered_ast)
+      results.append([path, reformatted_ast])
 
   # Create the output directory if there is something to output.
   if len(results) > 0:

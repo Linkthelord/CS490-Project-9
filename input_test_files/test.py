@@ -1,7 +1,7 @@
 import ast as a
 import time as t
-from math import sin as s, cos as c
-from torch.optim import SGD as s, SparseAdam as a
+from math import sin as si, cos as co
+import torch.optim as t
 
 
-s(a(y = s(a(z = x, x = 3, y = 3))))
+t.SGD(t.SparseAdam(y = t.SGD(t.SparseAdam(z = x, x = 3, y = 3))))
