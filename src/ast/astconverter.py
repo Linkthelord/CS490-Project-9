@@ -64,8 +64,7 @@ class ASTConverter:
       for value in root.values:
         values.append(self.convert_arguments(value))
       
-      dict_dict['keys'] = keys
-      dict_dict['values'] = values
+      dict_dict['key_values'] = list(zip(keys, values))
       return dict_dict
     
     else:

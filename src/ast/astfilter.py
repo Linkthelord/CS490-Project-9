@@ -139,6 +139,49 @@ class ASTFilter():
         keywords.append(keyword)
     call_ast['keywords'] = keywords
 
+  def reduce_value(self, value):
+    call_name = None
+    if isinstance(value, dict) and 'type' in value.keys():
+      temp_name = None
+      if value['type'] == 'call':
+        temp_name = self.reduce_call(value)
+      elif value['type'] == 'set' or value['type'] == 'list' or value['type'] == 'tuple':
+        temp_name = self.reduce_iterable(value)
+      elif value['type'] == 'dict':
+        temp_name = self.reduce_dict(value)
+      if temp_name != None:
+        call_name = temp_name
+    return call_name
+
+  def reduce_dict(self, arg):
+    call_name = None
+    key_values = []
+
+    for key, value in arg['key_values']:
+      key_temp_name = self.reduce_value(key)
+      if key_temp_name != None:
+        key_values.append([key, value])
+        call_name = key_temp_name
+        continue
+      
+      value_temp_name = self.reduce_value(value)
+      if value_temp_name != None:
+        key_values.append([key, value])
+
+    arg['key_values'] = key_values
+    return call_name
+
+  def reduce_iterable(self, args):
+    call_name = None
+    new_elements = []
+    for arg in args['elements']:
+      temp_name = self.reduce_value(arg)
+      if temp_name != None:
+        call_name = temp_name
+        new_elements.append(arg)
+    args['elements'] = new_elements
+    return call_name
+
   def reduce_call(self, call_ast):
     '''Encapsulating function that filters out the arguments and keywords of
     'call' nodes and recursively applies the same reduction to 'call' node
@@ -154,18 +197,17 @@ class ASTFilter():
     
     args = []
     for arg in call_ast['args']:
-      if isinstance(arg, dict) and 'type' in arg.keys() and arg['type'] == 'call':
-        temp_name = self.reduce_call(arg)
-        if arg['type'] == 'call' and temp_name != None:
-          args.append(arg)
-          call_name = temp_name
-    
+      temp_name = self.reduce_value(arg)
+      if temp_name != None:
+        call_name = temp_name
+        args.append(arg)
+
     keywords = []
     for keyword in call_ast['keywords']:
       if call_name != None and keyword['keyword'] in self.func_args[call_name]:
         keywords.append(keyword)
-      elif isinstance(keyword['value'], dict) and keyword['value']['type'] == 'call':
-        temp_name = self.reduce_call(keyword['value'])
+      else:
+        temp_name = self.reduce_value(keyword['value'])
         if temp_name != None:
           keywords.append(keyword)
           call_name = temp_name
