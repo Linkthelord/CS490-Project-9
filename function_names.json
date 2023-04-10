@@ -4,7 +4,9 @@
         "module": "torch.nn",
         "functions": [
           "Linear","Conv1d",
-          "Conv2d", 
+          {
+            "Conv2d": ["in_channels", "out_channels"]
+          },
           {
             "Conv3d": ["in_channels", "out_channels"]
           },
@@ -44,7 +46,10 @@
     {
         "module": "tf.keras.layers",
         "functions": [
-          "Dense", "Conv2D",
+          "Dense",
+          {
+            "Conv2d": ["in_channels", "out_channels"]
+          },
           "BatchNormalization", "Activation",
           "Dropout", "Average",
           "CategoryEncoding", "Conv1D",
