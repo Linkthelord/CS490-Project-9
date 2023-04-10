@@ -167,6 +167,7 @@ class ASTFilter():
       value_temp_name = self.reduce_value(value)
       if value_temp_name != None:
         key_values.append([key, value])
+        call_name = value_temp_name
 
     arg['key_values'] = key_values
     return call_name
