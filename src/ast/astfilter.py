@@ -56,7 +56,7 @@ class ASTFilter():
     respectively. 3 is filtered out from args because it is neither of those
     types of arguments.
     '''
-    result = self.filter_ast(ast)
+    result = self.filter_ast(ast.copy())
 
     for key in result.keys():
       if len(result[key]) > 0:
@@ -106,18 +106,6 @@ class ASTFilter():
 
     return imports_ast if len(names) > 0 else None
 
-  def search_call_name(self, name_obj):
-    '''Returns true if a specified function name is found in the call function
-    name (can be a nested structure). False otherwise.
-    '''
-    if isinstance(name_obj, str):
-      return name_obj if name_obj in self.function_names else None
-    
-    if name_obj['attribute'] in self.function_names:
-      return name_obj['attribute']
-    
-    return self.search_call_name(name_obj['object'])
-
   def filter_call_args(self, call_ast, func_args):
     '''Filters the 'args' and 'keywords' fields of a 'call' node such that
     only 'call' arguments are kept and keywords specified in the
@@ -140,6 +128,10 @@ class ASTFilter():
     call_ast['keywords'] = keywords
 
   def reduce_value(self, value):
+    '''Acts as a 'dispatch' function that calls the appropriate reducer
+    function based on value type, returns function name corresponding to
+    the function that it finds in the value.
+    '''
     call_name = None
     if isinstance(value, dict) and 'type' in value.keys():
       temp_name = None
@@ -154,6 +146,12 @@ class ASTFilter():
     return call_name
 
   def reduce_dict(self, arg):
+    '''Encapsulating function that filters out the key value pairs of 'dict' nodes
+    and applies the same reduction to each key and value node in key value pair.
+
+    Returns function name if a function specified in 'self.function_names' is
+    found. None otherwise.
+    '''
     call_name = None
     key_values = []
 
@@ -173,6 +171,12 @@ class ASTFilter():
     return call_name
 
   def reduce_iterable(self, args):
+    '''Encapsulating function that filters out the elements of 'set', 'list'
+    and 'tuple' nodes and applies reduction to each element node.
+
+    Returns function name if a function specified in 'self.function_names' is
+    found. None otherwise.
+    '''
     call_name = None
     new_elements = []
     for arg in args['elements']:
@@ -185,17 +189,16 @@ class ASTFilter():
 
   def reduce_call(self, call_ast):
     '''Encapsulating function that filters out the arguments and keywords of
-    'call' nodes and recursively applies the same reduction to 'call' node
-    arguments and keywords.
+    'call' nodes and applies reduction to each argument and keyword value node.
 
-    Returns True if a function specified in 'self.function_names' is found.
-    False otherwise.
+    Returns function name if a function specified in 'self.function_names' is
+    found. None otherwise.
     '''
-    call_name = self.search_call_name(call_ast['function'])
-    if call_name != None:
-      self.filter_call_args(call_ast, self.func_args[call_name])
-      return call_name
+    if call_ast['function'] in self.function_names:
+      self.filter_call_args(call_ast, self.func_args[call_ast['function']])
+      return call_ast['function']
     
+    call_name = None
     args = []
     for arg in call_ast['args']:
       temp_name = self.reduce_value(arg)
@@ -219,8 +222,8 @@ class ASTFilter():
 
   def reduce_function_def(self, function_def_ast):
     '''Encapsulating function that filters out the calls and function_defs of
-    'function_def' nodes and recursively applies reductions to nodes in 'calls'
-    and nodes in 'function_defs'.
+    'function_def' nodes and applies reductions to nodes in 'calls' and nodes
+    in 'function_defs'.
 
     Returns True if a function specified in 'self.function_names' is found.
     False otherwise.

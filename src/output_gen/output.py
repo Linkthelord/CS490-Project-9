@@ -12,7 +12,7 @@ def create_output_directory(path, project_path, output_path):
       ├── Test/
       │   └── test.py
       ├── Help/
-          └── helpers.py
+      │   └── helpers.py
       └── configs.py
   
   yields
@@ -21,14 +21,14 @@ def create_output_directory(path, project_path, output_path):
       ├── Test/
       │   └── test.py
       ├── Help/
-          └── helpers.py
+      │   └── helpers.py
       └── configs.py
   
   └── output
       ├── Test/
       │   └── test_py_output
       ├── Help/
-          └── helpers_py_output
+      │   └── helpers_py_output
       └── configs_py_output
 
   '''
