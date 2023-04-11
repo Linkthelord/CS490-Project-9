@@ -12,7 +12,10 @@ def crawl_directory(path, ignore_list):
 
   crawl_directory traverses the 'path' in BFS fashion and identifies all the
   files that are not specified by ignore_list either via pattern or specific
-  path. If files are excluded using '!', then they are 
+  path. If files are excluded using '!', then they are considered 'excluded'
+  from the ignore patterns and are represented in 'include_patterns' or
+  'include_directories' depending on how they are specified in .ignore
+  (i.e. they have a backslash at the end - e.g. test/).
 
   Example:
   └── my_project
