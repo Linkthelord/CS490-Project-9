@@ -33,7 +33,7 @@ def main():
 
   # Retrieve file paths that are not 'ignored' by the .ignore file.
   file_paths = crawl_directory(project_path, create_ignore_dict())
-  
+
   # Generate file AST for each path.
   file_ast = generate_file_ast(file_paths)
 
