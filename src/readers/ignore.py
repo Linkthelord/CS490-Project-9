@@ -21,7 +21,7 @@ def create_ignore_dict():
   are supported.
   '''
 
-  output_dict = {'paths': [], 'ignore': [], 'include': [], 'include_paths': []}
+  output_dict = {'directories': [], 'name_patterns': [], 'include_patterns': [], 'include_directories': []}
   try:
     with open('.ignore') as f:
       directory_patterns = []
@@ -45,10 +45,10 @@ def create_ignore_dict():
         else:
           name_patterns = name_patterns + handle_pattern(line)
 
-      output_dict['paths'] = directory_patterns
-      output_dict['ignore'] = name_patterns
-      output_dict['include'] = include_patterns
-      output_dict['include_paths'] = include_path_patterns
+      output_dict['directories'] = directory_patterns
+      output_dict['name_patterns'] = name_patterns
+      output_dict['include_patterns'] = include_patterns
+      output_dict['include_directories'] = include_path_patterns
   except Exception as e:
     # Do nothing if the file does not exist
     print(e)

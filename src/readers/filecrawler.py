@@ -23,10 +23,10 @@ def crawl_directory(path, ignore_list):
       └── configs.py
 
   ignore_list = {}
-  ignore_list['paths'] = ['Help/']
-  ignore_list['ignore'] = ['configs.py']
-  ignore_list['include'] = ['test.py']
-  ignore_list['include_paths'] = ['Test/']
+  ignore_list['directories'] = ['Help/']
+  ignore_list['name_patterns'] = ['configs.py']
+  ignore_list['include_patterns'] = ['test.py']
+  ignore_list['include_directories'] = ['Test/']
 
   crawl_directory(my_project, ignore_list) -> ['my_project/Test/test.py']
   '''
@@ -38,8 +38,8 @@ def crawl_directory(path, ignore_list):
     new_dirs = []
     for dir_path in dirs:
     
-      in_include_list = (len(ignore_list['include']) > 0 or len(ignore_list['include_paths']) > 0) and (is_pattern_match(dir_path, ignore_list['include']) or is_pattern_match(dir_path + '/', ignore_list['include_paths']))
-      in_ignore_list = (len(ignore_list['ignore']) > 0 or len(ignore_list['paths']) > 0) and (is_pattern_match(dir_path, ignore_list['ignore']) or is_pattern_match(dir_path + '/', ignore_list['paths']))
+      in_include_list = (len(ignore_list['include_patterns']) > 0 or len(ignore_list['include_directories']) > 0) and (is_pattern_match(dir_path, ignore_list['include_patterns']) or is_pattern_match(dir_path + '/', ignore_list['include_directories']))
+      in_ignore_list = (len(ignore_list['name_patterns']) > 0 or len(ignore_list['directories']) > 0) and (is_pattern_match(dir_path, ignore_list['name_patterns']) or is_pattern_match(dir_path + '/', ignore_list['paths']))
 
       dir = os.path.join(root, dir_path)
       if not in_include_list and not in_ignore_list:
@@ -51,8 +51,8 @@ def crawl_directory(path, ignore_list):
 
     dirs[:] = new_dirs
     for file_name in files:
-      in_include_list = len(ignore_list['include']) > 0 and is_pattern_match(file_name, ignore_list['include'])
-      in_ignore_list = len(ignore_list['ignore']) > 0 and is_pattern_match(file_name, ignore_list['ignore'])
+      in_include_list = len(ignore_list['include_patterns']) > 0 and is_pattern_match(file_name, ignore_list['include_patterns'])
+      in_ignore_list = len(ignore_list['name_patterns']) > 0 and is_pattern_match(file_name, ignore_list['name_patterns'])
 
       file_path = os.path.join(root, file_name)
       if not in_include_list and not in_ignore_list:
