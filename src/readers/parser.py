@@ -11,5 +11,4 @@ def generate_file_ast(file_paths):
         content.append([path, ast.parse(f.read())])
       except Exception as e:
         print('ERROR: cannot read file', path, '- Exception:', e)
-        print('Exception:', e)
   return content
