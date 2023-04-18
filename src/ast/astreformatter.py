@@ -9,6 +9,7 @@ class ASTReformatter():
   '''
   def __init__(self, args):
     self.function_names = args.keys()
+    self.func_args = args
     self.output_structure = []
     
   def run(self, filtered_ast):
@@ -121,6 +122,31 @@ class ASTReformatter():
     nodes for functions specified in 'function_names'.
     '''
     if call['function'] in self.function_names:
+      args = []
+      for arg in call['args']:
+        is_valid_arg = isinstance(arg, dict) and 'type' in arg.keys() and arg['type'] == 'constant'
+        if not is_valid_keyword:
+          return
+        else:
+          arg['value'] = arg['value']['value']
+          args.append(arg)
+
+      keywords = []
+      keyword_keys = []
+      for keyword in call['keywords']:
+        is_valid_keyword = isinstance(keyword['value'], dict) and 'type' in keyword['value'].keys() and keyword['value']['type'] == 'constant'
+        if not is_valid_keyword:
+          return
+        else:
+          keyword_keys.append(keyword['keyword'])
+          keyword['value'] = keyword['value']['value']
+          keywords.append(keyword)
+
+      if len(set(keyword_keys)) != len(set(self.func_args[call['function']])):
+        return
+
+      call['args'] = args
+      call['keywords'] = keywords
       self.output_structure.append(call)
     for arg in call['args']:
       self.search_value(arg)

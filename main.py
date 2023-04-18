@@ -41,15 +41,15 @@ def main():
 
   # Convert each AST to a JSON string.
   results = []
-  for [path, ast] in file_ast:
+  for [path, gen_ast] in file_ast:
     ast_converter = ASTConverter()
-    converted_ast = ast_converter.run(ast)
+    converted_ast = ast_converter.run(gen_ast)
 
     ast_filter = ASTFilter(func_args)
     filtered_ast = ast_filter.run(converted_ast)
     if filtered_ast != None:
       ast_reformatter = ASTReformatter(func_args)
-      reformatted_ast = ast_reformatter.run(filtered_ast)
+      reformatted_ast = ast_reformatter.run(converted_ast)
       results.append([path, reformatted_ast])
 
   # Create the output directory if there is something to output.

@@ -7,6 +7,19 @@ def is_pattern_match(path, patterns):
       return True
   return False
 
+def is_valid_file(file_name, ignore_list, root = ''):
+  in_include_list = len(ignore_list['include_patterns']) > 0 and is_pattern_match(file_name, ignore_list['include_patterns'])
+  in_ignore_list = len(ignore_list['name_patterns']) > 0 and is_pattern_match(file_name, ignore_list['name_patterns'])
+
+  file_path = os.path.join(root, file_name)
+  if not in_include_list and not in_ignore_list:
+    return True
+  elif in_include_list and not in_ignore_list:
+    return True
+  elif in_include_list and in_ignore_list:
+    return True
+  return False
+
 def crawl_directory(path, ignore_list):
   '''Crawls the directory starting at the path to find file paths that are valid.
 
@@ -33,9 +46,11 @@ def crawl_directory(path, ignore_list):
 
   crawl_directory(my_project, ignore_list) -> ['my_project/Test/test.py']
   '''
-  
   path = os.path.abspath(path)
   paths = []
+
+  if os.path.isfile(path) and is_valid_file(path, ignore_list):
+    paths.append(path)
 
   for root, dirs, files in os.walk(path, topdown = True):
     new_dirs = []
@@ -54,15 +69,7 @@ def crawl_directory(path, ignore_list):
 
     dirs[:] = new_dirs
     for file_name in files:
-      in_include_list = len(ignore_list['include_patterns']) > 0 and is_pattern_match(file_name, ignore_list['include_patterns'])
-      in_ignore_list = len(ignore_list['name_patterns']) > 0 and is_pattern_match(file_name, ignore_list['name_patterns'])
-
-      file_path = os.path.join(root, file_name)
-      if not in_include_list and not in_ignore_list:
-        paths.append(file_path)
-      elif in_include_list and not in_ignore_list:
-        paths.append(file_path)
-      elif in_include_list and in_ignore_list:
-        paths.append(file_path)
+      if is_valid_file(file_name, ignore_list, root = root):
+        paths.append(os.path.join(root, file_name))
 
   return paths

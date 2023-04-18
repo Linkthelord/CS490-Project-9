@@ -46,7 +46,7 @@ def read_function_names(path):
         arg_names = []
         if isinstance(func, dict):
           for key in func.keys():
-            arg_names = func[key]
+            arg_names = list(set(func[key]))
             function_name = module_name + '.' + key if module_name != None else key
             func_names[function_name] = arg_names
         else:

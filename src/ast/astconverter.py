@@ -23,6 +23,8 @@ class ASTConverter:
   def convert_arguments(self, root):
     if isinstance(root, ast.Call):
       return self.convert_call(root)
+    elif isinstance(root, ast.Name):
+      return self.convert_name(root)
     elif isinstance(root, ast.FunctionDef):
       return self.convert_function_def(root)
     elif isinstance(root, ast.Import) or isinstance(root, ast.ImportFrom):
@@ -65,7 +67,11 @@ class ASTConverter:
       
       dict_dict['key_values'] = list(zip(keys, values))
       return dict_dict
-    
+    elif isinstance(root, ast.Constant):
+      constant = {}
+      constant['type'] = 'constant'
+      constant['value'] = root.value
+      return constant
     else:
       return ast.unparse(root)
 
@@ -98,6 +104,14 @@ class ASTConverter:
       if key in self.aliases:
         return self.aliases[key]
       return key
+
+  def convert_name(self, root):
+    '''Converts Name nodes into a dictionary with the fields 'type' and 'value'
+    '''
+    name = {}
+    name['type'] = 'name'
+    name['value'] = root.id
+    return name
 
   def convert_call(self, root):
     '''Converts Call nodes into a dictionary with the fields 'function', args',
